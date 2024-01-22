@@ -1,0 +1,560 @@
+openapi: 3.0.3
+info:
+  title: API de Bootcamp49
+  description: Esta API se ancarga de manejar el negocio de BootCamp49
+  version: 1.0.0
+servers:
+- url: https://api.bootcamp49/v1/clientes/
+tags:
+- name: customer
+  description: Maneja los datos los clientes de BootCamp49
+- name: account
+  description: Realiza operaciones sobre las cuentas de los clientes de BootCamp49
+- name: creditCard
+  description: Realiza operaciones sobre las tarjetas de credito de los clientes de BootCamp49
+- name: loan
+  description: Realiza operaciones sobre los prestamos de los clientes de BootCamp49
+- name: fixedTermAccount
+  description: Realiza operaciones sobre las cuentas de plazo fijo de los clientes de BootCamp49
+paths:
+
+  /customer/{idCliente}:
+    get:
+      tags:
+      - customer
+      summary: Obtiene la infomacion de un cliente.
+      parameters:
+      - name: idCliente
+        in: path
+        description: Identificador del cliente
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn del cliente se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+ 
+  /customer/findProduct/{idCliente}:
+    get:
+      tags:
+      - customer
+      summary: Obtiene la infomacion de productos de un cliente.
+      parameters:
+      - name: idCliente
+        in: path
+        description: Identificador del cliente
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn del cliente se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExitoFindProduct'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'  
+
+  
+  /account/statement/{idProduct}:
+    get:
+      tags:
+      - account
+      summary: Obtiene el saldo de una cuenta de un cliente (cuenta de ahorro,  cuenta corriente o plazo fijo)
+      parameters:
+      - name: idProduct
+        in: path
+        description: Identificador de la cuenta aobtener
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+  /account/getListMovement/{idProduct}:
+    get:
+      tags:
+      - account
+      summary: Obtiene el listado de movimientos de una cuenta de un cliente (ahorro o cuenta corriente)
+      parameters:
+      - name: idProduct
+        in: path
+        description: Identificador de la cuenta
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'        
+
+  /account/withdrawal/{idProduct}:
+    post:
+      tags:
+      - account
+      summary: Realiza el retiro de saldo de una cuenta (ahorro o cuenta corriente)
+      parameters:
+        - name: idProduct
+          in: path
+          description: ID de producto (cuenta de ahorros)
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idMoneda
+          required: true
+          in: query
+          description: Identificador moneda
+          schema:
+            type: string
+        - name: ammount
+          required: true
+          in: query
+          description: Monto a retirar
+          schema:
+            type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'  
+          
+  /account/deposit/{idProduct}:
+    post:
+      tags:
+      - account
+      summary: Realiza el deposito de saldo de una cuenta (ahorro o cuenta corriente)
+      parameters:
+        - name: idProduct
+          in: path
+          description: ID de producto (cuenta de ahorros)
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idMoneda
+          required: true
+          in: query
+          description: Identificador moneda
+          schema:
+            type: string
+        - name: ammount
+          required: true
+          in: query
+          description: Monto a depositar
+          schema:
+            type: string
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'        
+  
+  /creditCard/statement/{idProduct}:
+    get:
+      tags:
+      - creditCard
+      summary: Obtiene la linea disponible de una tarjeta de credito (personal o empresarial)
+      parameters:
+        - name: idProduct
+          in: path
+          description: ID de producto (cuenta de ahorros)
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idMoneda
+          required: true
+          in: query
+          description: Identificador moneda
+          schema:
+            type: string
+        - name: ammount
+          required: true
+          in: query
+          description: Monto a depositar
+          schema:
+            type: string
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'  
+  
+  /creditCard/getListMovement/{idProduct}:
+    get:
+      tags:
+      - creditCard
+      summary: Obtiene el listado de movimientos de una tarjeta de credito (personal o empresarial)
+      parameters:
+      - name: idProduct
+        in: path
+        description: Identificador de la cuenta
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'  
+  
+  /creditCard/purchase/{idProduct}:
+    post:
+      tags:
+      - creditCard
+      summary: Realiza el registro de consumos de una tarjeta de credito (personal o empresarial)
+      parameters:
+        - name: idProduct
+          in: path
+          description: ID de producto (cuenta de ahorros)
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idMoneda
+          required: true
+          in: query
+          description: Identificador moneda
+          schema:
+            type: string
+        - name: ammount
+          required: true
+          in: query
+          description: Monto a depositar
+          schema:
+            type: string
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'    
+  
+  /creditCard/payment/{idProduct}:
+    post:
+      tags:
+      - creditCard
+      summary: Obtiene el listado de movimientos de un prestamo (personal o empresarial)
+      parameters:
+      - name: idProduct
+        in: path
+        description: Identificador de la cuenta
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+          
+  /loan/statement/{idProduct}:
+    get:
+      tags:
+      - loan
+      summary: Obtiene el estado de cuenta de un prestamo (personal o empresarial)
+      parameters:
+        - name: idProduct
+          in: path
+          description: ID de producto (prestamo)
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idMoneda
+          required: true
+          in: query
+          description: Identificador moneda
+          schema:
+            type: string
+        - name: ammount
+          required: true
+          in: query
+          description: Monto a depositar
+          schema:
+            type: string
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'  
+  
+  /loan/getListMovement/{idProduct}:
+    get:
+      tags:
+      - loan
+      summary: Obtiene el listado de movimientos de un prestamo (personal o empresarial)
+      parameters:
+      - name: idProduct
+        in: path
+        description: Identificador de la cuenta
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError' 
+  
+  /loan/payment/{idProduct}:
+    post:
+      tags:
+      - loan
+      summary: Obtiene el listado de movimientos de un prestamo (personal o empresarial)
+      parameters:
+      - name: idProduct
+        in: path
+        description: Identificador de la cuenta
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+  /fixedTermAccount/statement/{idProduct}:
+    get:
+      tags:
+      - fixedTermAccount
+      summary: Obtiene el estado de cuenta de un cuenta de plazo fijo (personal o empresarial)
+      parameters:
+        - name: idProduct
+          in: path
+          description: ID de producto (prestamo)
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idMoneda
+          required: true
+          in: query
+          description: Identificador moneda
+          schema:
+            type: string
+        - name: ammount
+          required: true
+          in: query
+          description: Monto a depositar
+          schema:
+            type: string
+      responses:
+        200:
+          description: (OK) La informacipn de la cuenta se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoClientesGet'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'  
+
+  
+components:
+  responses:
+    
+    Unauthorized:
+      description: (Unauthorized) No hay autorizacion para llamar al servicio
+    
+    NotFound:
+      description: (NotFound) No se encontro informacion 
+    
+    BadRequest:
+      description: (Bad Request) Los datos enviados son incorrectos o hay datos obligatorios no enviados
+      
+    ServerError:
+      description: Error en servidor
+        
+
+  schemas:
+
+    ExitoClientesGet:
+      type: object
+      properties:
+        id_cliente:
+          type: integer
+          description: Id cliente
+          format: int64
+        primer_nombre:
+          type: string
+          description: Primer nombre del cliente
+        segundo_nombre:
+          type: string
+          description: Segundo nombre del cliente
+        apellido_paterno:
+          type: string
+          description: Apellido paterno del cliente
+        apellido_materno:
+          type: string
+          description: Apellido materno del cliente
+        correo_electronico:
+          type: string
+          description: Email del cliente
+        telefono_celular:
+          type: string
+          description: Telefono celular del cliente
+       
+    ExitoFindProduct:
+      type: object
+      properties:
+        id_producto:
+          type: integer
+          description: Id producto
+          format: int64
+        nombre_producto:
+          type: string
+          description: Nombre Producto
+  
+   
